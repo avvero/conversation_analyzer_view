@@ -1,5 +1,21 @@
 function conversationController($scope, data, $stateParams) {
-    $scope.data = data
+    $scope.series = {}
+    $scope.data = [[],[]]
+    $scope.labels = [];
+    for (var i = 0; i < data.length; i++) {
+        var from = data[i].from
+        if (data[i].analysis) {
+            $scope.labels.push(i)
+            var angr = data[i].analysis.document_tone.tone_categories[0].tones[0].score
+            if (from.name == "Антон") {
+                $scope.data[0].push(angr)
+                $scope.data[1].push(0)
+            } else {
+                $scope.data[0].push(0)
+                $scope.data[1].push(angr)
+            }
+        }
+    }
 
     /**
      * Chart
@@ -8,44 +24,20 @@ function conversationController($scope, data, $stateParams) {
     // $scope.CHART_CAPACITY = 200
     // $scope.CHART_UPDATE_INTERVAL = 1000
     // $scope.CHART_SKIP_ZERO_TICKS = false
-    // $scope.chartOptions = {
-    //     animation: false,
-    //     datasetStrokeWidth: 0.5,
-    //     pointDot: false,
-    //     showScale: true,
-    //     showTooltips: false,
-    //     scaleShowLabels: true,
-    //     bezierCurve : true
-    // };
+    $scope.options = {
+        animation: false,
+        datasetStrokeWidth: 0.5,
+        pointDot: false,
+        showScale: true,
+        scaleShowLabels: true,
+        bezierCurve : true
+    };
 
-    $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-    $scope.series = ['Series A', 'Series B'];
-    $scope.data = [
-        [65, 59, 80, 81, 56, 55, 40],
-        [28, 48, 40, 19, 86, 27, 90]
-    ];
+    $scope.series = ["Антон", "Я"];
     $scope.onClick = function (points, evt) {
         console.log(points, evt);
     };
-    $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-    $scope.options = {
-        scales: {
-            yAxes: [
-                {
-                    id: 'y-axis-1',
-                    type: 'linear',
-                    display: true,
-                    position: 'left'
-                },
-                {
-                    id: 'y-axis-2',
-                    type: 'linear',
-                    display: true,
-                    position: 'right'
-                }
-            ]
-        }
-    };
+    // $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
 }
 
 conversationController.resolve = {
