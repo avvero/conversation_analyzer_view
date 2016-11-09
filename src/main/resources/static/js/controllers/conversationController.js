@@ -1,29 +1,38 @@
 function conversationController($scope, data, $stateParams) {
-    $scope.series = {}
-    $scope.data = [[],[]]
+    $scope.series = []
+    $scope.data = []
     $scope.labels = [];
+
+    var groupedData = {}
     for (var i = 0; i < data.length; i++) {
-        var from = data[i].from
+        var accountName = data[i].from.name || data[i].from.id
+        if (!groupedData[accountName]) {
+            groupedData[accountName] = []
+        }
+    }
+    for (var i = 0; i < data.length; i++) {
+        var currentAccountName = data[i].from.name || data[i].from.id
         if (data[i].analysis) {
-            $scope.labels.push(i)
-            var angr = data[i].analysis.document_tone.tone_categories[0].tones[0].score
-            if (from.name == "Антон") {
-                $scope.data[0].push(angr)
-                $scope.data[1].push(0)
-            } else {
-                $scope.data[0].push(0)
-                $scope.data[1].push(angr)
+            $scope.labels.push(i) //TODO
+            var angry = data[i].analysis.document_tone.tone_categories[0].tones[0].score
+            for (var accountName in groupedData) {
+                if (currentAccountName == accountName) {
+                    groupedData[accountName].push(angry)
+                } else {
+                    groupedData[accountName].push(0)
+                }
             }
         }
+    }
+    for (var accountName in groupedData) {
+        $scope.series.push(accountName)
+        $scope.data.push(groupedData[accountName])
     }
 
     /**
      * Chart
      *
      */
-    // $scope.CHART_CAPACITY = 200
-    // $scope.CHART_UPDATE_INTERVAL = 1000
-    // $scope.CHART_SKIP_ZERO_TICKS = false
     $scope.options = {
         animation: false,
         datasetStrokeWidth: 0.5,
@@ -32,8 +41,6 @@ function conversationController($scope, data, $stateParams) {
         scaleShowLabels: true,
         bezierCurve : true
     };
-
-    $scope.series = ["Антон", "Я"];
     $scope.onClick = function (points, evt) {
         console.log(points, evt);
     };
