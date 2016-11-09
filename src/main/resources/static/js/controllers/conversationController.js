@@ -13,7 +13,7 @@ function conversationController($scope, data, $stateParams) {
     for (var i = 0; i < data.length; i++) {
         var currentAccountName = data[i].from.name || data[i].from.id
         if (data[i].analysis) {
-            $scope.labels.push(i) //TODO
+            $scope.labels.push(data[i].text) //TODO
             var angry = data[i].analysis.document_tone.tone_categories[0].tones[0].score
             for (var accountName in groupedData) {
                 if (currentAccountName == accountName) {
@@ -34,12 +34,27 @@ function conversationController($scope, data, $stateParams) {
      *
      */
     $scope.options = {
-        animation: false,
-        datasetStrokeWidth: 0.5,
-        pointDot: false,
-        showScale: true,
-        scaleShowLabels: true,
-        bezierCurve : true
+        title: {
+            display: true,
+            text: 'Tone analysis for the conversation [Anger]'
+        },
+        legend: {
+            display: true,
+            position: 'bottom'
+        },
+        scales: {
+            xAxes: [{
+                display: false,
+                scaleLabel: {
+                    display: false
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    max: 1
+                }
+            }]
+        }
     };
     $scope.onClick = function (points, evt) {
         console.log(points, evt);
