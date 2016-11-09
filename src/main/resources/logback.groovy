@@ -22,8 +22,8 @@ import static ch.qos.logback.classic.Level.TRACE
 import static ch.qos.logback.classic.Level.WARN
 
 appender("flow", MarkerSocketAppender) {
-//    remoteHost = "FLOW-22088A04"
-    remoteHost = "localhost"
+    remoteHost = "FLOW-22088A04"
+//    remoteHost = "localhost"
     port = 4561
     marker = "c_a_view"
 }
