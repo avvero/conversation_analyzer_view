@@ -1,3 +1,9 @@
+<div class="btn-group" role="group" aria-label="...">
+    <button type="button" class="btn btn-default {{emotionToneId == $index ? 'active': ''}}" ng-click="setEmotionToneId($index)"
+            ng-repeat="emotionTone in emotionTones">
+        {{emotionTone}}
+    </button>
+</div>
 <canvas id="line" class="chart chart-line"
         chart-data="data"
         chart-labels="labels"
