@@ -4,28 +4,36 @@ function conversationController($scope, data, $stateParams) {
     $scope.labels = [];
 
     var groupedData = {}
+    var accounts = {}
     for (var i = 0; i < data.length; i++) {
-        var accountName = data[i].from.name || data[i].from.id
-        if (!groupedData[accountName]) {
-            groupedData[accountName] = []
+        if (!accounts[data[i].from.id]) {
+            var name = data[i].from.name || data[i].from.id
+            accounts[data[i].from.id] = name
+        } else {
+            if(accounts[data[i].from.id] == data[i].from.id && data[i].from.name) {
+                accounts[data[i].from.id] = data[i].from.name
+            }
         }
     }
+    for (var account in accounts) {
+        $scope.series.push(accounts[account])
+        groupedData[account] = []
+    }
+
     for (var i = 0; i < data.length; i++) {
-        var currentAccountName = data[i].from.name || data[i].from.id
         if (data[i].analysis) {
-            $scope.labels.push(data[i].text) //TODO
+            $scope.labels.push(data[i].text)
             var angry = data[i].analysis.document_tone.tone_categories[0].tones[0].score
-            for (var accountName in groupedData) {
-                if (currentAccountName == accountName) {
-                    groupedData[accountName].push(angry)
+            for (var accountId in groupedData) {
+                if (data[i].from.id == accountId) {
+                    groupedData[accountId].push(angry)
                 } else {
-                    groupedData[accountName].push(0)
+                    groupedData[accountId].push(0)
                 }
             }
         }
     }
     for (var accountName in groupedData) {
-        $scope.series.push(accountName)
         $scope.data.push(groupedData[accountName])
     }
 
